@@ -1,0 +1,19 @@
+{
+  "name": "heroes-api",
+  "version": "0.0.0",
+  "description": "Just a small recruitment API service.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jason2506/heroes-api.git"
+  },
+  "author": "Chi-En Wu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jason2506/heroes-api/issues"
+  },
+  "homepage": "https://github.com/jason2506/heroes-api#readme"
+}
