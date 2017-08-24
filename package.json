@@ -4,6 +4,7 @@
   "description": "Just a small recruitment API service.",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint --cache .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/jason2506/heroes-api/issues"
   },
-  "homepage": "https://github.com/jason2506/heroes-api#readme"
+  "homepage": "https://github.com/jason2506/heroes-api#readme",
+  "devDependencies": {
+    "eslint": "^4.5.0"
+  }
 }
