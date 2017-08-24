@@ -1,0 +1,13 @@
+language: node_js
+
+node_js:
+  - "6"
+
+jobs:
+  include:
+
+    - stage: test
+      script: npm run lint
+
+    - stage: test
+      script: npm run test
