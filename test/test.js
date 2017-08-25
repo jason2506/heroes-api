@@ -1,8 +1,9 @@
-let chai = require('chai');
-let expect = chai.expect;
+const chai = require('chai');
 
-describe('1', function () {
-  it('should equal to 1', function() {
+const expect = chai.expect;
+
+describe('1', () => {
+  it('should equal to 1', () => {
     expect(1).to.equal(1);
   });
 });
