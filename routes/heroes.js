@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', (req, res, next) => {
   request('/heroes')
     .then(JSON.parse)
-    .then((heroes) => res.json(200, heroes))
+    .then((heroes) => res.status(200).json(heroes))
     .catch(next);
 });
 
