@@ -4,41 +4,52 @@ const express = require('express');
 
 const router = express.Router();
 
-// fetch all public hero data
-router.get('/', (req, res, next) => {
+const fetchFromSource = (path) => {
   const options = {
     hostname: 'hahow-recruit.herokuapp.com',
-    path: '/heroes',
+    path,
   };
 
-  const delegateReq = http.request(options, (delegateRes) => {
-    if (delegateRes.statusCode === 200) {
-      // start getting data from the data source
-      const chunks = [];
-      delegateRes.on('data', (chunk) => {
-        chunks.push(chunk);
-      });
+  return new Promise((resolve, reject) => {
+    const req = http.request(options, (res) => {
+      if (res.statusCode === 200) {
+        // start getting data from the data source
+        const chunks = [];
+        res.on('data', (chunk) => {
+          chunks.push(chunk);
+        });
 
-      delegateRes.on('end', () => {
-        // reconstruct and return result object once finishing receiving all of chunks
-        const result = JSON.parse(chunks.join(''));
-        res.json(delegateRes.statusCode, result);
-      });
-    } else {
-      // something went wrong!
-      // wrap status code and message of response into an error object
-      const err = new Error(delegateRes.statusMessage || '');
-      err.status = delegateRes.statusCode;
+        res.on('end', () => {
+          // reconstruct and return result object once finishing receiving all of chunks
+          const data = JSON.parse(chunks.join(''));
+          resolve({
+            statusCode: res.statusCode,
+            data,
+          });
+        });
+      } else {
+        // something went wrong!
+        // wrap status code and message of response into an error object
+        const err = new Error(res.statusMessage || '');
+        err.status = res.statusCode;
 
-      // invoke error handler with the error object
-      next(err);
-    }
+        // invoke error handler with the error object
+        reject(err);
+      }
+    });
+
+    // handle exception while sending request to the data source
+    req.on('error', reject);
+
+    req.end();
   });
+};
 
-  // handle exception while sending request to the data source
-  delegateReq.on('error', next);
-
-  delegateReq.end();
+// fetch all public hero data
+router.get('/', (req, res, next) => {
+  fetchFromSource('/heroes')
+    .then(({ statusCode, data }) => res.json(statusCode, data))
+    .catch(next);
 });
 
 module.exports = router;
