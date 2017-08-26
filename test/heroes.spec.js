@@ -39,4 +39,23 @@ describe('GET /heroes', () => {
         done();
       });
   });
+
+  it('should return an error if the data source does not correctly return result', (done) => {
+    nock('http://hahow-recruit.herokuapp.com')
+      .get('/heroes')
+      .reply(404);
+
+    chai.request(app)
+      .get('/heroes')
+      .end((err, res) => {
+        expect(err).to.be.an('Error');
+        expect(res).to.have.status(404);
+
+        // [NOTE] There is no way to specify `res.statusMessage` with nock.
+        // See: https://github.com/node-nock/nock/issues/469
+        expect(res.body).to.deep.equal('');
+
+        done();
+      });
+  });
 });
