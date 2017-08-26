@@ -21,12 +21,8 @@ const fetchFromSource = (path) => {
         });
 
         res.on('end', () => {
-          // reconstruct and return result object once finishing receiving all of chunks
-          const data = JSON.parse(chunks.join(''));
-          resolve({
-            statusCode: res.statusCode,
-            data,
-          });
+          // return response with body once finishing receiving all of chunks
+          resolve(chunks.join(''));
         });
       } else {
         // something went wrong!
@@ -49,7 +45,8 @@ const fetchFromSource = (path) => {
 // fetch all public hero data
 router.get('/', (req, res, next) => {
   fetchFromSource('/heroes')
-    .then(({ statusCode, data }) => res.json(statusCode, data))
+    .then(JSON.parse)
+    .then((heroes) => res.json(200, heroes))
     .catch(next);
 });
 
