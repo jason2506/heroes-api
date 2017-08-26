@@ -58,4 +58,22 @@ describe('GET /heroes', () => {
         done();
       });
   });
+
+  it('should return message with 500 code if request to the data source is failed', (done) => {
+    const errorMessage = 'BOOOOOOM';
+
+    nock('http://hahow-recruit.herokuapp.com')
+      .get('/heroes')
+      .replyWithError(errorMessage);
+
+    chai.request(app)
+      .get('/heroes')
+      .end((err, res) => {
+        expect(err).to.be.an('Error');
+        expect(res).to.have.status(500);
+        expect(res.body).to.deep.equal(errorMessage);
+
+        done();
+      });
+  });
 });

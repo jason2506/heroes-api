@@ -35,6 +35,9 @@ router.get('/', (req, res, next) => {
     }
   });
 
+  // handle exception while sending request to the data source
+  delegateReq.on('error', next);
+
   delegateReq.end();
 });
 
