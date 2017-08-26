@@ -2,14 +2,26 @@
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const nock = require('nock');
-
-const app = require('../app');
+const proxyquire = require('proxyquire');
+const sinon = require('sinon');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
 
 describe('GET /heroes', () => {
+  let requestMock, router, app;
+
+  beforeEach(() => {
+    requestMock = sinon.mock('request');
+    requestMock
+      .once()
+      .withExactArgs('/heroes');
+
+    // replace the `request()` function with mock object
+    router = proxyquire('../routes/heroes', { '../utils/request': requestMock });
+    app = proxyquire('../app', { './routes/heroes': router });
+  });
+
   it('should return a list of public heroes', (done) => {
     const heroes = [
       {
@@ -24,13 +36,14 @@ describe('GET /heroes', () => {
       },
     ];
 
-    nock('http://hahow-recruit.herokuapp.com')
-      .get('/heroes')
-      .reply(200, heroes);
+    const data = JSON.stringify(heroes);
+    requestMock.resolves(data);
 
     chai.request(app)
       .get('/heroes')
       .end((err, res) => {
+        requestMock.verify();
+
         expect(err).to.be.null;
         expect(res).to.have.status(200);
         expect(res).to.be.json;
@@ -40,38 +53,19 @@ describe('GET /heroes', () => {
       });
   });
 
-  it('should return an error if the data source does not correctly return result', (done) => {
-    nock('http://hahow-recruit.herokuapp.com')
-      .get('/heroes')
-      .reply(404);
+  it('should return error message if request is rejected', (done) => {
+    const error = new Error('Unknown Error');
+    error.status = 999;
+    requestMock.rejects(error);
 
     chai.request(app)
       .get('/heroes')
       .end((err, res) => {
+        requestMock.verify();
+
         expect(err).to.be.an('Error');
-        expect(res).to.have.status(404);
-
-        // [NOTE] There is no way to specify `res.statusMessage` with nock.
-        // See: https://github.com/node-nock/nock/issues/469
-        expect(res.body).to.deep.equal('');
-
-        done();
-      });
-  });
-
-  it('should return message with 500 code if request to the data source is failed', (done) => {
-    const errorMessage = 'BOOOOOOM';
-
-    nock('http://hahow-recruit.herokuapp.com')
-      .get('/heroes')
-      .replyWithError(errorMessage);
-
-    chai.request(app)
-      .get('/heroes')
-      .end((err, res) => {
-        expect(err).to.be.an('Error');
-        expect(res).to.have.status(500);
-        expect(res.body).to.deep.equal(errorMessage);
+        expect(res).to.have.status(error.status);
+        expect(res.body).to.deep.equal(error.message);
 
         done();
       });
