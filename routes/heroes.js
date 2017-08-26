@@ -4,7 +4,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const fetchFromSource = (path) => {
+const request = (path) => {
   const options = {
     hostname: 'hahow-recruit.herokuapp.com',
     headers: { 'Content-Type': 'application/json' },
@@ -44,7 +44,7 @@ const fetchFromSource = (path) => {
 
 // fetch all public hero data
 router.get('/', (req, res, next) => {
-  fetchFromSource('/heroes')
+  request('/heroes')
     .then(JSON.parse)
     .then((heroes) => res.json(200, heroes))
     .catch(next);
