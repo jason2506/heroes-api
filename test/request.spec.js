@@ -1,5 +1,3 @@
-/* eslint no-unused-expressions: off */
-
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
