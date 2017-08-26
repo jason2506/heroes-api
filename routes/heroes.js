@@ -7,6 +7,7 @@ const router = express.Router();
 const fetchFromSource = (path) => {
   const options = {
     hostname: 'hahow-recruit.herokuapp.com',
+    headers: { 'Content-Type': 'application/json' },
     path,
   };
 
