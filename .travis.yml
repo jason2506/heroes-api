@@ -12,6 +12,7 @@ jobs:
     script: npm run docs
     deploy:
       provider: heroku
+      skip_cleanup: true
       api_key:
         secure: JgI3qhf/uQrVYvs5gpjgaLCQWbiLlksu/GDJXzlsxJvBVuooB8oPzHCySOZHSlrXrXW5NB6nqSF6RLH3g3j1ASLSh58ZS1d9LBw22nTIPDlYIgmPPZRQ81yJG3O/4jaxISe0fFVEmBXMtxaMyCH7nt5wAVp1zrLKFrMu3ecN9kHBfvMp+ZTyOHQd1wakZZbQgk50Jep40ww/J8v1pyvKQVKW9x8k6mb6RdfagMGa+dZTzJxvn6SWnAdAHBVD7/3mv7t58ePKsOjT8TnT+nlGrO36zxB9ebFU+3iO+TKOuTnyRKAXvDuaGuFTKMnLxFt+ti4eAN7WLQPfNn/NKU5k6Sz8DLuNqpqO0tmltXcTDXlrpyR1Ft4ZlTvPWb6OAdYsyTD3Cc63RExMkbN9RQ4n/IY7RacIHWLaFX9370QwkhzKgIvbGhXSrpBcxKQejD8T3//oUzK4aTx1d/Ffhqtkj/L5E8E5D546KKQmSq5Zt3gfE3h9NWA+RiiHkqCQivkNxVf10muzVGJoAVIBVLopY3ayV+uXgYEGQeo8UuLMuOX3Zo6IBamcuSRDT7HXrmK3EEfzhpNfgazwiHTDkNaZpQkSA/8m8LcX1RFfUpdOdqEkgDfkbAAk+2ZX/f6R5lSMwBAqCEb6xXcDmv8QmdbS1rSM7OUz3YlUBFQ0Ae8J8ww=
       app:
