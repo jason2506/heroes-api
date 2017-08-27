@@ -26,10 +26,14 @@ const auth = (req) => {
     .then(returnTrue);
 };
 
+// fetch hero profile for given hero id
+const fetchHeroProfile = (heroId) =>
+  request({ path: `/heroes/${ heroId }/profile` })
+    .then(parseJSON);
+
 // fetch hero profile, and then attach it to the hero object
 const fetchAndAttachHeroProfile = (hero) =>
-  request({ path: `/heroes/${ hero.id }/profile` })
-    .then(parseJSON)
+  fetchHeroProfile(hero.id)
     .then((profile) => Object.assign(hero, { profile }));
 
 // fetch and attach profile for each of the hero objects
@@ -46,11 +50,31 @@ const fetechHeroes = (authorized) => {
     : promise;
 };
 
+// fetch hero objects and its profile (if the request is authorized) in parallel
+const fetechHero = (heroId) => (authorized) => {
+  const heroPromise = request({ path: `/heroes/${ heroId }` })
+    .then(parseJSON);
+  const profilePromise = authorized
+    ? fetchHeroProfile(heroId)
+    : void 0;
+
+  return Promise.all([heroPromise, profilePromise])
+    .then(([hero, profile]) => Object.assign(hero, { profile }));
+};
+
 // fetch all public hero data
 router.get('/', (req, res, next) => {
   auth(req)
     .then(fetechHeroes)
     .then((heroes) => res.status(200).json(heroes))
+    .catch(next);
+});
+
+// fetch single hero data
+router.get('/:heroId', (req, res, next) => {
+  auth(req)
+    .then(fetechHero(req.params.heroId))
+    .then((hero) => res.status(200).json(hero))
     .catch(next);
 });
 
