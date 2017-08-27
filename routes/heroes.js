@@ -41,7 +41,7 @@ const fetchAndAttachAllHeroProfiles = (heroes) =>
   Promise.all(heroes.map(fetchAndAttachHeroProfile));
 
 // fetch all hero objects, and then attach profile for each of them if the request is authorized
-const fetechHeroes = (authorized) => {
+const fetchHeroes = (authorized) => {
   const promise = request({ path: '/heroes' })
     .then(parseJSON);
 
@@ -51,7 +51,7 @@ const fetechHeroes = (authorized) => {
 };
 
 // fetch hero objects and its profile (if the request is authorized) in parallel
-const fetechHero = (heroId) => (authorized) => {
+const fetchHero = (heroId) => (authorized) => {
   const heroPromise = request({ path: `/heroes/${ heroId }` })
     .then(parseJSON);
   const profilePromise = authorized
@@ -65,7 +65,7 @@ const fetechHero = (heroId) => (authorized) => {
 // fetch all public hero data
 router.get('/', (req, res, next) => {
   auth(req)
-    .then(fetechHeroes)
+    .then(fetchHeroes)
     .then((heroes) => res.status(200).json(heroes))
     .catch(next);
 });
@@ -73,7 +73,7 @@ router.get('/', (req, res, next) => {
 // fetch single hero data
 router.get('/:heroId', (req, res, next) => {
   auth(req)
-    .then(fetechHero(req.params.heroId))
+    .then(fetchHero(req.params.heroId))
     .then((hero) => res.status(200).json(hero))
     .catch(next);
 });
