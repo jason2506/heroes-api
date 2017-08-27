@@ -26,7 +26,7 @@ describe('request()', () => {
       .get('/heroes')
       .reply(200, heroes);
 
-    const reqPromise = request('/heroes')
+    const reqPromise = request({ path: '/heroes' })
       .then(JSON.parse);
 
     return expect(reqPromise).to.eventually.deep.equal(heroes);
@@ -39,7 +39,7 @@ describe('request()', () => {
       .get('/auth')
       .reply(400);
 
-    const reqPromise = request('/auth');
+    const reqPromise = request({ path: '/auth' });
     return expect(reqPromise).to.be.rejectedWith(Error, '')
       .and.eventually.have.property('status', 400);
   });
@@ -50,7 +50,7 @@ describe('request()', () => {
       .get('/error')
       .replyWithError(errorMessage);
 
-    const reqPromise = request('/error');
+    const reqPromise = request({ path: '/error' });
     return expect(reqPromise).to.be.rejectedWith(errorMessage);
   });
 });

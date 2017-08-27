@@ -15,7 +15,7 @@ describe('GET /heroes', () => {
     requestMock = sinon.mock('request');
     requestMock
       .once()
-      .withExactArgs('/heroes');
+      .withExactArgs({ path: '/heroes' });
 
     // replace the `request()` function with mock object
     router = proxyquire('../routes/heroes', { '../utils/request': requestMock });
