@@ -175,4 +175,35 @@ describe('GET /heroes/:heroId', () => {
         done();
       });
   });
+
+  it('should return hero profile if the request is authorized', (done) => {
+    const hero = heroesWithProfiles[0];
+    chai.request(app)
+      .get(`/heroes/${ hero.id }`)
+      .set('Name', correctAuth.name)
+      .set('Password', correctAuth.password)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.deep.equal(hero);
+
+        done();
+      });
+  });
+
+  it('should reject the request if provided auth info is wrong', (done) => {
+    const hero = heroesWithProfiles[0];
+    chai.request(app)
+      .get(`/heroes/${ hero.id }`)
+      .set('Name', wrongAuth.name)
+      .set('Password', wrongAuth.password)
+      .end((err, res) => {
+        expect(err).to.be.an('Error');
+        expect(res).to.have.status(authError.status);
+        expect(res.body).to.deep.equal(authError.message);
+
+        done();
+      });
+  });
 });
