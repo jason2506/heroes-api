@@ -31,6 +31,10 @@ for (let i = 0, n = heroes.length; i < n; i++) {
   heroesWithProfiles.push(Object.assign({}, hero, { profile }));
 }
 
+const nonExistentHeroId = 999999;
+const notFoundError = new Error('Not Found');
+notFoundError.status = 404;
+
 const correctAuth = { name: 'name', password: 'password' };
 const wrongAuth = { name: 'foo', password: 'bar' };
 const authError = new Error('Unauthorized');
@@ -60,9 +64,18 @@ const initRequestStub = () => {
     .withArgs(authRequestOptions, wrongPostBody)
     .rejects(authError);
 
+  requestStub
+    .withArgs({ path: `/heroes/${ nonExistentHeroId }` })
+    .rejects(notFoundError);
+
   for (let i = 0, n = heroes.length; i < n; i++) {
     const hero = heroes[i];
     const profile = heroProfiles[i];
+
+    requestStub
+      .withArgs({ path: `/heroes/${ hero.id }` })
+      .resolves(JSON.stringify(hero));
+
     requestStub
       .withArgs({ path: `/heroes/${ hero.id }/profile` })
       .resolves(JSON.stringify(profile));
@@ -136,4 +149,30 @@ describe('GET /heroes', () => {
 
 describe('GET /heroes/:heroId', () => {
   beforeEach(initRequestStub);
+
+  it('should return hero with the specified id', (done) => {
+    const hero = heroes[0];
+    chai.request(app)
+      .get(`/heroes/${ hero.id }`)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.deep.equal(hero);
+
+        done();
+      });
+  });
+
+  it('should return an error with 404 code if the specified hero id is nonexistent', (done) => {
+    chai.request(app)
+      .get(`/heroes/${ nonExistentHeroId }`)
+      .end((err, res) => {
+        expect(err).to.be.an('Error');
+        expect(res).to.have.status(notFoundError.status);
+        expect(res.body).to.deep.equal(notFoundError.message);
+
+        done();
+      });
+  });
 });
