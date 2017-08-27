@@ -7,7 +7,8 @@
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www --watch .",
     "lint": "eslint --cache .",
-    "test": "mocha"
+    "test": "nyc mocha",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -23,10 +24,12 @@
     "chai": "^4.1.1",
     "chai-as-promised": "^7.1.1",
     "chai-http": "^3.0.0",
+    "coveralls": "^2.13.1",
     "eslint": "^4.5.0",
     "mocha": "^3.5.0",
     "nock": "^9.0.14",
     "nodemon": "^1.11.0",
+    "nyc": "^11.1.0",
     "proxyquire": "^1.8.0",
     "sinon": "^3.2.1"
   },
