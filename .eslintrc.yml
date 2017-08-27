@@ -96,7 +96,7 @@ rules:
   ### Stylistic Issues
   array-bracket-newline: error
   array-bracket-spacing: error
-  array-element-newline: error
+  #array-element-newline: error
   block-spacing: error
   brace-style:
     - error

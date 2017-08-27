@@ -11,31 +11,13 @@ chai.use(chaiHttp);
 describe('GET /heroes', () => {
   // prepare data for test cases
   const heroes = [
-    {
-      id: 1,
-      name: 'hero1',
-      image: 'hero1.jpg',
-    },
-    {
-      id: 2,
-      name: 'hero2',
-      image: 'hero2.jpg',
-    },
+    { id: 1, name: 'hero1', image: 'hero1.jpg' },
+    { id: 2, name: 'hero2', image: 'hero2.jpg' },
   ];
 
   const heroProfiles = [
-    {
-      str: 2,
-      int: 7,
-      agi: 9,
-      luk: 7,
-    },
-    {
-      str: 9,
-      int: 1,
-      agi: 4,
-      luk: 5,
-    },
+    { str: 2, int: 7, agi: 9, luk: 7 },
+    { str: 9, int: 1, agi: 4, luk: 5 },
   ];
 
   const heroesWithProfiles = [];
