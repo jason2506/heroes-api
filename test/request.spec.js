@@ -64,4 +64,20 @@ describe('request()', () => {
     const reqPromise = request(options, JSON.stringify(data));
     return expect(reqPromise).to.eventually.equal('OK');
   });
+
+  it('should support https requests', () => {
+    const data = { user: 'hahow', password: 'rocks' };
+    nock('https://hahow-recruit.herokuapp.com')
+      .post('/auth', data)
+      .reply(200, 'OK');
+
+    const options = {
+      protocol: 'https:',
+      method: 'POST',
+      path: '/auth',
+    };
+
+    const reqPromise = request(options, JSON.stringify(data));
+    return expect(reqPromise).to.eventually.equal('OK');
+  });
 });

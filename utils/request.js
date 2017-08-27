@@ -1,4 +1,5 @@
 const http = require('http');
+const https = require('https');
 
 const request = (options, body) => {
   const headers = { 'Content-Type': 'application/json' };
@@ -7,8 +8,12 @@ const request = (options, body) => {
   const allOptions = { hostname: 'hahow-recruit.herokuapp.com' };
   Object.assign(allOptions, options, { headers });
 
+  const protocol = options.protocol === 'https:'
+    ? https
+    : http;
+
   return new Promise((resolve, reject) => {
-    const req = http.request(allOptions, (res) => {
+    const req = protocol.request(allOptions, (res) => {
       if (res.statusCode === 200) {
         // start getting data from the data source
         const chunks = [];
