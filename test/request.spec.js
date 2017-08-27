@@ -53,4 +53,15 @@ describe('request()', () => {
     const reqPromise = request({ path: '/error' });
     return expect(reqPromise).to.be.rejectedWith(errorMessage);
   });
+
+  it('should support POST method with body', () => {
+    const data = { foo: 'bar', abc: 123 };
+    nock('http://hahow-recruit.herokuapp.com')
+      .post('/post', data)
+      .reply(200, 'OK');
+
+    const options = { method: 'POST', path: '/post' };
+    const reqPromise = request(options, JSON.stringify(data));
+    return expect(reqPromise).to.eventually.equal('OK');
+  });
 });

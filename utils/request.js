@@ -1,6 +1,6 @@
 const http = require('http');
 
-const request = (options) => {
+const request = (options, body) => {
   const headers = { 'Content-Type': 'application/json' };
   Object.assign(headers, options.headers);
 
@@ -33,6 +33,10 @@ const request = (options) => {
 
     // handle exception while sending request to the data source
     req.on('error', reject);
+
+    if (body) {
+      req.write(body);
+    }
 
     req.end();
   });
