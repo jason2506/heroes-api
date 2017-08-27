@@ -3,7 +3,6 @@ const cookieParser = require('cookie-parser');
 const express = require('express');
 const logger = require('morgan');
 
-const index = require('./routes/index');
 const heroes = require('./routes/heroes');
 
 const app = express();
@@ -13,7 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', index);
+app.use('/', express.static('docs'));
 app.use('/heroes', heroes);
 
 // catch 404 and forward to error handler

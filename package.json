@@ -8,7 +8,8 @@
     "dev": "nodemon ./bin/www --watch .",
     "lint": "eslint --cache .",
     "test": "nyc mocha",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "docs": "apidoc -f routes/.*\\.js$ -i ./ -o docs/"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,12 @@
     "url": "https://github.com/jason2506/heroes-api/issues"
   },
   "homepage": "https://github.com/jason2506/heroes-api#readme",
+  "apidoc": {
+    "title": "Heroes API",
+    "url" : "https://localhost:3000"
+  },
   "devDependencies": {
+    "apidoc": "^0.17.6",
     "chai": "^4.1.1",
     "chai-as-promised": "^7.1.1",
     "chai-http": "^3.0.0",

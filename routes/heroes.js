@@ -62,7 +62,74 @@ const fetchHero = (heroId) => (authorized) => {
     .then(([hero, profile]) => Object.assign(hero, { profile }));
 };
 
-// fetch all public hero data
+/**
+ * @api {get} /heroes                   List Heroes
+ * @apiName ListHeroes
+ * @apiGroup Heroes
+ *
+ * @apiHeader (Auth) {String} name      Auth Name for accessing Private Profile.
+ * @apiHeader (Auth) {String} password  Auth Password.
+ *
+ * @apiSuccess {Object[]} heroes        List of Heroes.
+ * @apiSuccess {Object} heroes.profile  Private Hero Profile.
+ *
+ * @apiExample {curl} Example Usage
+ *     curl -H "Accept: application/json" \
+ *          -H "Content-Type: application/json" \
+ *          -X GET "http://localhost:3000/heroes"
+ *
+ * @apiExample {curl} Example Usage (Authorized)
+ *     curl -H "Accept: application/json" \
+ *          -H "Content-Type: application/json" \
+ *          -H "Name: hahow" -H "Password: rocks" \
+ *          -X GET "http://localhost:3000/heroes"
+ *
+ * @apiSuccessExample Success Response
+ *     HTTP/1.1 200 OK
+ *     [
+ *       {
+ *         id: "1",
+ *         name: "Daredevil",
+ *         image: "http://i.annihil.us/u/prod/marvel/i/mg/6/90/537ba6d49472b/standard_xlarge.jpg"
+ *       },
+ *       {
+ *         id: "2",
+ *         name: "Thor",
+ *         image: "http://x.annihil.us/u/prod/marvel/i/mg/5/a0/537bc7036ab02/standard_xlarge.jpg"
+ *       }
+ *     ]
+ *
+ * @apiSuccessExample Success Response (Authorized)
+ *     HTTP/1.1 200 OK
+ *     [
+ *       {
+ *         id: "1",
+ *         name: "Daredevil",
+ *         image: "http://i.annihil.us/u/prod/marvel/i/mg/6/90/537ba6d49472b/standard_xlarge.jpg",
+ *         profile: {
+ *           str: 2,
+ *           int: 7,
+ *           agi: 9,
+ *           luk: 7
+ *         }
+ *       },
+ *       {
+ *         id: "2",
+ *         name: "Thor",
+ *         image: "http://x.annihil.us/u/prod/marvel/i/mg/5/a0/537bc7036ab02/standard_xlarge.jpg",
+ *         profile: {
+ *           str: 8,
+ *           int: 2,
+ *           agi: 5,
+ *           luk: 9
+ *         }
+ *       }
+ *     ]
+ *
+ * @apiErrorExample Authentication Failed Response
+ *     HTTP/1.1 401 Unauthorized
+ *     "Unauthorized"
+ */
 router.get('/', (req, res, next) => {
   auth(req)
     .then(fetchHeroes)
@@ -70,7 +137,58 @@ router.get('/', (req, res, next) => {
     .catch(next);
 });
 
-// fetch single hero data
+/**
+ * @api {get} /heroes/:heroId           Single Hero
+ * @apiName SingleHero
+ * @apiGroup Heroes
+ *
+ * @apiParam {Number} heroId            Heroes unique ID.
+ *
+ * @apiHeader (Auth) {String} name      Auth Name for accessing Private Profile.
+ * @apiHeader (Auth) {String} password  Auth Password.
+ *
+ * @apiSuccess {Number} id              Heroes unique ID.
+ * @apiSuccess {String} name            Name of the Hero.
+ * @apiSuccess {String} image           Image of the Hero.
+ * @apiSuccess {Object} profile         Private Hero Profile.
+ *
+ * @apiExample {curl} Example Usage
+ *     curl -H "Accept: application/json" \
+ *          -H "Content-Type: application/json" \
+ *          -X GET "http://localhost:3000/heroes/1"
+ *
+ * @apiExample {curl} Example Usage (Authorized)
+ *     curl -H "Accept: application/json" \
+ *          -H "Content-Type: application/json" \
+ *          -H "Name: hahow" -H "Password: rocks" \
+ *          -X GET "http://localhost:3000/heroes/1"
+ *
+ * @apiSuccessExample Success Response
+ *     HTTP/1.1 200 OK
+ *     {
+ *       id: "1",
+ *       name: "Daredevil",
+ *       image: "http://i.annihil.us/u/prod/marvel/i/mg/6/90/537ba6d49472b/standard_xlarge.jpg"
+ *     }
+ *
+ * @apiSuccessExample Success Response (Authorized)
+ *     HTTP/1.1 200 OK
+ *     {
+ *       id: "1",
+ *       name: "Daredevil",
+ *       image: "http://i.annihil.us/u/prod/marvel/i/mg/6/90/537ba6d49472b/standard_xlarge.jpg",
+ *       profile: {
+ *         str: 2,
+ *         int: 7,
+ *         agi: 9,
+ *         luk: 7
+ *       }
+ *     }
+ *
+ * @apiErrorExample Authentication Failed Response
+ *     HTTP/1.1 401 Unauthorized
+ *     "Unauthorized"
+ */
 router.get('/:heroId', (req, res, next) => {
   auth(req)
     .then(fetchHero(req.params.heroId))
