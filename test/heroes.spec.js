@@ -45,7 +45,10 @@ describe('GET /heroes', () => {
     heroesWithProfiles.push(Object.assign({}, hero, { profile }));
   }
 
-  const auth = { name: 'name', password: 'password' };
+  const correctAuth = { name: 'name', password: 'password' };
+  const wrongAuth = { name: 'foo', password: 'bar' };
+  const authError = new Error('Unauthorized');
+  authError.status = 401;
 
   // replace the `request()` function with mock object
   const requestStub = sinon.stub();
@@ -60,14 +63,21 @@ describe('GET /heroes', () => {
       .withArgs({ path: '/heroes' })
       .resolves(JSON.stringify(heroes));
 
-    const postBody = JSON.stringify(auth);
+    const authRequestOptions = {
+      protocol: 'https:',
+      method: 'POST',
+      path: '/auth',
+    };
+
+    const correctPostBody = JSON.stringify(correctAuth);
     requestStub
-      .withArgs({
-        protocol: 'https:',
-        method: 'POST',
-        path: '/auth',
-      }, postBody)
+      .withArgs(authRequestOptions, correctPostBody)
       .resolves('OK');
+
+    const wrongPostBody = JSON.stringify(wrongAuth);
+    requestStub
+      .withArgs(authRequestOptions, wrongPostBody)
+      .rejects(authError);
 
     for (let i = 0, n = heroes.length; i < n; i++) {
       const hero = heroes[i];
@@ -105,6 +115,35 @@ describe('GET /heroes', () => {
         expect(err).to.be.an('Error');
         expect(res).to.have.status(error.status);
         expect(res.body).to.deep.equal(error.message);
+
+        done();
+      });
+  });
+
+  it('should return heroes with profile if the request is authorized', (done) => {
+    chai.request(app)
+      .get('/heroes')
+      .set('Name', correctAuth.name)
+      .set('Password', correctAuth.password)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.deep.equal(heroesWithProfiles);
+
+        done();
+      });
+  });
+
+  it('should reject the request if provided auth info is wrong', (done) => {
+    chai.request(app)
+      .get('/heroes')
+      .set('Name', wrongAuth.name)
+      .set('Password', wrongAuth.password)
+      .end((err, res) => {
+        expect(err).to.be.an('Error');
+        expect(res).to.have.status(authError.status);
+        expect(res.body).to.deep.equal(authError.message);
 
         done();
       });
