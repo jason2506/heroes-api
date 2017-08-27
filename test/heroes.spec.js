@@ -8,67 +8,69 @@ const sinon = require('sinon');
 const expect = chai.expect;
 chai.use(chaiHttp);
 
-describe('GET /heroes', () => {
-  // prepare data for test cases
-  const heroes = [
-    { id: 1, name: 'hero1', image: 'hero1.jpg' },
-    { id: 2, name: 'hero2', image: 'hero2.jpg' },
-  ];
+// replace the `request()` function with stub object
+const requestStub = sinon.stub();
+const router = proxyquire('../routes/heroes', { '../utils/request': requestStub });
+const app = proxyquire('../app', { './routes/heroes': router });
 
-  const heroProfiles = [
-    { str: 2, int: 7, agi: 9, luk: 7 },
-    { str: 9, int: 1, agi: 4, luk: 5 },
-  ];
+// prepare data for test cases
+const heroes = [
+  { id: 1, name: 'hero1', image: 'hero1.jpg' },
+  { id: 2, name: 'hero2', image: 'hero2.jpg' },
+];
 
-  const heroesWithProfiles = [];
+const heroProfiles = [
+  { str: 2, int: 7, agi: 9, luk: 7 },
+  { str: 9, int: 1, agi: 4, luk: 5 },
+];
+
+const heroesWithProfiles = [];
+for (let i = 0, n = heroes.length; i < n; i++) {
+  const hero = heroes[i];
+  const profile = heroProfiles[i];
+  heroesWithProfiles.push(Object.assign({}, hero, { profile }));
+}
+
+const correctAuth = { name: 'name', password: 'password' };
+const wrongAuth = { name: 'foo', password: 'bar' };
+const authError = new Error('Unauthorized');
+authError.status = 401;
+
+const initRequestStub = () => {
+  requestStub.reset();
+
+  // define default stub behavior
+  requestStub
+    .withArgs({ path: '/heroes' })
+    .resolves(JSON.stringify(heroes));
+
+  const authRequestOptions = {
+    protocol: 'https:',
+    method: 'POST',
+    path: '/auth',
+  };
+
+  const correctPostBody = JSON.stringify(correctAuth);
+  requestStub
+    .withArgs(authRequestOptions, correctPostBody)
+    .resolves('OK');
+
+  const wrongPostBody = JSON.stringify(wrongAuth);
+  requestStub
+    .withArgs(authRequestOptions, wrongPostBody)
+    .rejects(authError);
+
   for (let i = 0, n = heroes.length; i < n; i++) {
     const hero = heroes[i];
     const profile = heroProfiles[i];
-    heroesWithProfiles.push(Object.assign({}, hero, { profile }));
+    requestStub
+      .withArgs({ path: `/heroes/${ hero.id }/profile` })
+      .resolves(JSON.stringify(profile));
   }
+};
 
-  const correctAuth = { name: 'name', password: 'password' };
-  const wrongAuth = { name: 'foo', password: 'bar' };
-  const authError = new Error('Unauthorized');
-  authError.status = 401;
-
-  // replace the `request()` function with mock object
-  const requestStub = sinon.stub();
-  const router = proxyquire('../routes/heroes', { '../utils/request': requestStub });
-  const app = proxyquire('../app', { './routes/heroes': router });
-
-  beforeEach(() => {
-    requestStub.reset();
-
-    // define default stub behavior
-    requestStub
-      .withArgs({ path: '/heroes' })
-      .resolves(JSON.stringify(heroes));
-
-    const authRequestOptions = {
-      protocol: 'https:',
-      method: 'POST',
-      path: '/auth',
-    };
-
-    const correctPostBody = JSON.stringify(correctAuth);
-    requestStub
-      .withArgs(authRequestOptions, correctPostBody)
-      .resolves('OK');
-
-    const wrongPostBody = JSON.stringify(wrongAuth);
-    requestStub
-      .withArgs(authRequestOptions, wrongPostBody)
-      .rejects(authError);
-
-    for (let i = 0, n = heroes.length; i < n; i++) {
-      const hero = heroes[i];
-      const profile = heroProfiles[i];
-      requestStub
-        .withArgs({ path: `/heroes/${ hero.id }/profile` })
-        .resolves(JSON.stringify(profile));
-    }
-  });
+describe('GET /heroes', () => {
+  beforeEach(initRequestStub);
 
   it('should return a list of public heroes', (done) => {
     chai.request(app)
@@ -130,4 +132,8 @@ describe('GET /heroes', () => {
         done();
       });
   });
+});
+
+describe('GET /heroes/:heroId', () => {
+  beforeEach(initRequestStub);
 });
