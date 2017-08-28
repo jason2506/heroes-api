@@ -185,6 +185,10 @@ router.get('/', (req, res, next) => {
  *       }
  *     }
  *
+ * @apiErrorExample Error Response
+ *     HTTP/1.1 404 Not Found
+ *     "Not Found"
+ *
  * @apiErrorExample Authentication Failed Response
  *     HTTP/1.1 401 Unauthorized
  *     "Unauthorized"
