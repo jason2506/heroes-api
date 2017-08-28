@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www --ignore docs/ --ignore test/ --watch .",
-    "lint": "eslint --cache .",
+    "lint": "eslint --ignore-pattern docs --cache .",
     "test": "nyc mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "docs": "apidoc -f routes/.*\\.js$ -i ./ -o docs/"
