@@ -1,6 +1,6 @@
 {
   "name": "heroes-api",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Just a small recruitment API service.",
   "main": "index.js",
   "scripts": {
