@@ -3,6 +3,8 @@
 const http = require('http');
 const https = require('https');
 
+const config = require('../config');
+
 /**
  * Sends HTTP requests to the pre-defined data source.
  *
@@ -15,7 +17,7 @@ const request = (options, body) => {
   const headers = { 'Content-Type': 'application/json' };
   Object.assign(headers, options.headers);
 
-  const allOptions = { hostname: 'hahow-recruit.herokuapp.com' };
+  const allOptions = { hostname: config.dataSourceHost };
   Object.assign(allOptions, options, { headers });
 
   const protocol = options.protocol === 'https:'

@@ -2,10 +2,13 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
 
+const config = require('../config');
 const request = require('../utils/request');
 
 const expect = chai.expect;
 chai.use(chaiAsPromised);
+
+const baseURL = `http://${ config.dataSourceHost }`;
 
 describe('request()', () => {
   it('should return a promise of response', () => {
@@ -22,7 +25,7 @@ describe('request()', () => {
       },
     ];
 
-    nock('http://hahow-recruit.herokuapp.com')
+    nock(baseURL)
       .get('/heroes')
       .reply(200, heroes);
 
@@ -35,7 +38,7 @@ describe('request()', () => {
   it('should reject with an error object with status code if response is not valid', () => {
     // [NOTE] There is no way to specify `res.statusMessage` with nock.
     // See: https://github.com/node-nock/nock/issues/469
-    nock('http://hahow-recruit.herokuapp.com')
+    nock(baseURL)
       .get('/auth')
       .reply(400);
 
@@ -46,7 +49,7 @@ describe('request()', () => {
 
   it('should reject with an error object if the request is failed', () => {
     const errorMessage = 'BOOOOOOM';
-    nock('http://hahow-recruit.herokuapp.com')
+    nock(baseURL)
       .get('/error')
       .replyWithError(errorMessage);
 
@@ -56,7 +59,7 @@ describe('request()', () => {
 
   it('should support POST method with body', () => {
     const data = { foo: 'bar', abc: 123 };
-    nock('http://hahow-recruit.herokuapp.com')
+    nock(baseURL)
       .post('/post', data)
       .reply(200, 'OK');
 
