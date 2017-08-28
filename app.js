@@ -1,5 +1,3 @@
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
 const express = require('express');
 const logger = require('morgan');
 
@@ -8,9 +6,6 @@ const heroes = require('./routes/heroes');
 const app = express();
 
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 
 app.use('/', express.static('docs'));
 app.use('/heroes', heroes);
