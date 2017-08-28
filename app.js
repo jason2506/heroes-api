@@ -17,7 +17,15 @@ app.use((req, res, next) => {
   next(err);
 });
 
-// error handler
+// error handlers
+if (process.env.NODE_ENV !== 'production') {
+  app.use((err, req, res, next) => {
+    /* eslint no-console:off */
+    console.error(err.stack);
+    next(err);
+  });
+}
+
 app.use((err, req, res, _next) => {
   res.status(err.status || 500);
   res.json(err.message);
