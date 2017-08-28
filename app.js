@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 });
 
 // error handlers
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'development') {
   app.use((err, req, res, next) => {
     /* eslint no-console:off */
     console.error(err.stack);
