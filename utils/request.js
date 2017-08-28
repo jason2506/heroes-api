@@ -1,6 +1,16 @@
+/** Defines a help function which is used to send request to the data source. */
+
 const http = require('http');
 const https = require('https');
 
+/**
+ * Sends HTTP requests to the pre-defined data source.
+ *
+ * @param {Object} options  The option object which will be passed to http.request().
+ * @param {String} body     Optional body content which will be sent with the request.
+ * @returns {Promise}       A promise that resolves to content of response body, or rejects with an
+ *                          error if request failed.
+ */
 const request = (options, body) => {
   const headers = { 'Content-Type': 'application/json' };
   Object.assign(headers, options.headers);

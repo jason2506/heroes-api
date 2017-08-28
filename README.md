@@ -249,5 +249,6 @@ commit 時，視 commit 的目的（加功能、重構、調整設定等等）�
 
 * 如果有文件產生工具的話，基本上 public interface 都會照既定的格式撰寫。
     - 在這裡是使用 apidoc 的格式撰寫 API 的註解。
+    - 另外，雖然沒有用來產生文件，其餘 function 的註解是採用 [JSDoc](http://usejsdoc.org) 的格式撰寫的。
 * 在 code block 較長或較為複雜，無法一眼看出在做什麼的情況下，也會加上註解說明。
 * TODO、workaround、或是需要解釋業務邏輯才能瞭解為什麼要這麼做的部分。

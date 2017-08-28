@@ -1,3 +1,5 @@
+/** Express router providing heroes related routes. */
+
 const express = require('express');
 
 const request = require('../utils/request');
@@ -5,9 +7,21 @@ const request = require('../utils/request');
 const router = express.Router();
 
 const parseJSON = JSON.parse;
+
+/**
+ * A function that always returns true.
+ *
+ * @returns {Boolean}       Always true.
+ */
 const returnTrue = () => true;
 
-// check if the request is authorized
+/**
+ * Checks if the request is authorized.
+ *
+ * @param {Request} req     The express request object to be checked.
+ * @returns {Promise}       A promise that resolves to a boolean indicating whether the request is
+ *                          authorized, or rejects with an error if authorization failed.
+ */
 const auth = (req) => {
   const name = req.get('Name');
   const password = req.get('Password');
@@ -26,21 +40,48 @@ const auth = (req) => {
     .then(returnTrue);
 };
 
-// fetch hero profile for given hero id
+/**
+ * Fetches hero profile for given hero id.
+ *
+ * @param {Number} heroId   Heroes unique ID.
+ * @returns {Promise}       A promise that resolves to a object contains profile of the specified
+ *                          hero, or rejects with an error if request failed.
+ */
 const fetchHeroProfile = (heroId) =>
   request({ path: `/heroes/${ heroId }/profile` })
     .then(parseJSON);
 
-// fetch hero profile, and then attach it to the hero object
+/**
+ * Fetches hero profile, and then attaches it to the hero object.
+ *
+ * @param {Object} hero     A hero object.
+ * @returns {Promise}       A promise that resolves to the hero object with its profile, or rejects
+ *                          with an error if request failed.
+ */
 const fetchAndAttachHeroProfile = (hero) =>
   fetchHeroProfile(hero.id)
     .then((profile) => Object.assign(hero, { profile }));
 
-// fetch and attach profile for each of the hero objects
+/**
+ * Fetches and attaches profile for each of the hero objects.
+ *
+ * @param {Array} heroes    A list of hero objects.
+ * @returns {Promise}       A promise that resolves to the array of hero objects and each of them
+ *                          have their own profile data, or rejects with an error if request
+ *                          failed.
+ */
 const fetchAndAttachAllHeroProfiles = (heroes) =>
   Promise.all(heroes.map(fetchAndAttachHeroProfile));
 
-// fetch all hero objects, and then attach profile for each of them if the request is authorized
+/**
+ * Fetch all hero objects, and then attach profile for each of them if the request is authorized.
+ *
+ * @param {Boolean} authorized
+ *                          A boolean value indicating whether the request is authorized.
+ * @returns {Promise}       A promise that resolves to the array of hero objects, or rejects with
+ *                          an error if request failed. If authorized is true, then each of the
+ *                          object will contain their own profile data.
+ */
 const fetchHeroes = (authorized) => {
   const promise = request({ path: '/heroes' })
     .then(parseJSON);
@@ -50,7 +91,16 @@ const fetchHeroes = (authorized) => {
     : promise;
 };
 
-// fetch hero objects and its profile (if the request is authorized) in parallel
+/**
+ * Fetches hero objects and its profile (if the request is authorized) in parallel.
+ *
+ * @param {Number} heroId   Heroes unique ID.
+ * @param {Boolean} authorized
+ *                          A boolean value indicating whether the request is authorized.
+ * @returns {Promise}       A promise that resolves to the hero object with given id, or rejects
+ *                          with an error if request failed. If authorized is true, then the
+ *                          object will contain its profile data as well.
+ */
 const fetchHero = (heroId) => (authorized) => {
   const heroPromise = request({ path: `/heroes/${ heroId }` })
     .then(parseJSON);
