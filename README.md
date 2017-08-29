@@ -1,6 +1,6 @@
 # Heroes API
 
-[![Build Status](https://travis-ci.org/jason2506/heroes-api.svg?branch=develop)](https://travis-ci.org/jason2506/heroes-api) [![Coverage Status](https://coveralls.io/repos/github/jason2506/heroes-api/badge.svg?branch=develop)](https://coveralls.io/github/jason2506/heroes-api?branch=develop)
+[![Build Status](https://travis-ci.org/jason2506/heroes-api.svg?branch=master)](https://travis-ci.org/jason2506/heroes-api) [![Coverage Status](https://coveralls.io/repos/github/jason2506/heroes-api/badge.svg?branch=master)](https://coveralls.io/github/jason2506/heroes-api?branch=master)
 
 
 ## 如何執行
