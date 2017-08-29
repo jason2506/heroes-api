@@ -23,7 +23,7 @@
   "homepage": "https://github.com/jason2506/heroes-api#readme",
   "apidoc": {
     "title": "Heroes API",
-    "url": "https://localhost:3000"
+    "url": "https://hahow-heroes-api.herokuapp.com"
   },
   "devDependencies": {
     "apidoc": "^0.17.6",

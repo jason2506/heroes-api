@@ -126,13 +126,13 @@ const fetchHero = (heroId) => (authorized) => {
  * @apiExample {curl} Example Usage
  *     curl -H "Accept: application/json" \
  *          -H "Content-Type: application/json" \
- *          -X GET "http://localhost:3000/heroes"
+ *          -X GET "https://hahow-heroes-api.herokuapp.com/heroes"
  *
  * @apiExample {curl} Example Usage (Authorized)
  *     curl -H "Accept: application/json" \
  *          -H "Content-Type: application/json" \
  *          -H "Name: hahow" -H "Password: rocks" \
- *          -X GET "http://localhost:3000/heroes"
+ *          -X GET "https://hahow-heroes-api.herokuapp.com/heroes"
  *
  * @apiSuccessExample Success Response
  *     HTTP/1.1 200 OK
@@ -205,13 +205,13 @@ router.get('/', (req, res, next) => {
  * @apiExample {curl} Example Usage
  *     curl -H "Accept: application/json" \
  *          -H "Content-Type: application/json" \
- *          -X GET "http://localhost:3000/heroes/1"
+ *          -X GET "https://hahow-heroes-api.herokuapp.com/heroes/1"
  *
  * @apiExample {curl} Example Usage (Authorized)
  *     curl -H "Accept: application/json" \
  *          -H "Content-Type: application/json" \
  *          -H "Name: hahow" -H "Password: rocks" \
- *          -X GET "http://localhost:3000/heroes/1"
+ *          -X GET "https://hahow-heroes-api.herokuapp.com/heroes/1"
  *
  * @apiSuccessExample Success Response
  *     HTTP/1.1 200 OK
